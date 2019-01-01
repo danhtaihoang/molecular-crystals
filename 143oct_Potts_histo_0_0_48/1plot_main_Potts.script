@@ -1,0 +1,145 @@
+#!/bin/sh
+
+# =============================================================================================
+# =============================================================================================
+# DOC CAC GIA TRI TU FILE PARAMETER
+# =============================================================================================
+# =============================================================================================
+
+#=============================================================================================
+# Loai bo, chi lay tu cot 31 den cot 35 cua file parameter.in
+cut -c31-35 1parameter.in > parameter_file_giantiep.dat
+
+# Doc gia tri dua vao so dong
+i=1
+while [ $i -le 30 ]
+do
+read value
+
+if [ $i -eq 6 ]
+then
+motif_struct=$value
+fi
+
+if [ $i -eq 7 ]
+then
+lattice=$value
+fi
+
+if [ $i -eq 17 ]
+then
+natx=$value
+fi
+
+if [ $i -eq 18 ]
+then
+naty=$value
+fi
+
+if [ $i -eq 19 ]
+then
+natz=$value
+fi
+
+if [ $i -eq 23 ]
+then
+P_config=$value
+fi
+
+if [ $i -eq 25 ]
+then
+J2=$value
+fi
+
+if [ $i -eq 28 ]
+then
+D=$value
+fi
+
+if [ $i -eq 29 ]
+then
+A=$value
+fi
+
+if [ $i -eq 30 ]
+then
+r0=$value
+fi
+
+i=$(echo "scale=0; $i+1" | bc)
+done < parameter_file_giantiep.dat
+
+rm parameter_file_giantiep.dat
+
+echo "motif_struct: " $motif_struct
+echo "Lattice: " $lattice
+echo "Natx = " $natx
+echo "Naty = " $naty
+echo "Natz = " $natz
+echo "P_config: " $P_config
+
+
+# =============================================================================================
+# =============================================================================================
+# GAN CAC DAI LUONG CAN VE DO THI
+# =============================================================================================
+# =============================================================================================
+
+for i in 1 2 3 4
+do
+
+# Gan cac bien cua Nang luong E
+if [ $i -eq 1 ]
+then
+name_y="E"
+number_culomn=2
+file_average_dat="average_thermal.dat"
+fi
+
+# Gan cac bien cua M
+if [ $i -eq 2 ]
+then
+name_y="M"
+number_culomn=3
+file_average_dat="average_thermal.dat"
+fi
+
+# Gan cac bien cua Cv
+if [ $i -eq 3 ]
+then
+name_y="Cv"
+number_culomn=4
+file_average_dat="average_thermal.dat"
+fi
+
+
+# Gan cac bien cua Ksi
+if [ $i -eq 4 ]
+then
+name_y="Ksi"
+number_culomn=5
+file_average_dat="average_thermal.dat"
+fi
+
+
+# =============================================================================================
+# =============================================================================================
+# VE DO THI
+# =============================================================================================
+# =============================================================================================
+
+gnuplot -persist << EOF
+set term postscript enhanced color "Times-Roman" 14
+set autoscale
+set key right top
+set pointsize 1
+set xlabel "T"
+set ylabel "$name_y"
+set output "$name_y in T.ps"
+set title "$motif_struct $lattice : $natx x$naty x$natz D=$D r0=$r0"
+plot "$file_average_dat" u 1:$number_culomn notitle w p lt 3 pt 7
+
+EOF
+done
+
+

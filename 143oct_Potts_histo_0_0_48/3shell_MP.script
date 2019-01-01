@@ -1,0 +1,41 @@
+#!/bin/sh
+
+rm -r config_ini_3D
+rm -r config_3D
+rm -r a
+rm *.dat
+rm a.out
+
+echo -n "Number of folder = "
+read nF
+
+mkdir a
+cp 1main_POTTS.f90 a
+cp 1parameter.in a
+cp 0job a
+
+
+i_folder=1
+while [ $i_folder -le $nF ]
+do
+cp -r a $i_folder
+
+echo "running folder $i_folder"
+cd $i_folder
+gfortran -Wall -fdefault-integer-8 -fdefault-real-8 1main_POTTS.f90
+qsub 0job
+#./a.out
+cd ..
+
+i_folder=$(echo "scale=0; $i_folder+1" | bc)
+
+done
+
+
+
+
+
+
+
+
+

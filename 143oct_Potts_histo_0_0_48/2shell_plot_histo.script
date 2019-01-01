@@ -1,0 +1,24 @@
+#!/bin/sh
+# Chuong ve dong thoi 2 hoac 3 do thi (dung de tim hieu ung)
+# this is script-shell for collection result from osaka
+
+# ===========================================================================================
+# Lua chon buoc tien hanh
+# ===========================================================================================
+
+echo -n "Number of folder = "
+read nF
+
+i_folder=1
+while [ $i_folder -le $nF ]
+
+do
+cp 2plot_histo.script $i_folder
+cd $i_folder
+./2plot_histo.script
+cd ..
+
+i_folder=$(echo "scale=0; $i_folder+1" | bc)
+
+done
+
